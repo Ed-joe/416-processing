@@ -1,8 +1,7 @@
 import argparse
 import json
 from functools import partial
-from gerrychain import (GeographicPartition, Partition, Graph, MarkovChain,
-                        proposals, updaters, constraints, accept, Election)
+from gerrychain import (GeographicPartition, Graph, MarkovChain, updaters, constraints, accept, Election)
 from gerrychain.proposals import recom
 
 
