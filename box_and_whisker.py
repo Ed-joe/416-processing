@@ -1,21 +1,16 @@
-import numpy
-from gerrychain import Partition, Graph
-
-def calculate_box_and_whisker(partition, groups):
+def calculate_box_and_whisker(partition, group_ids, total_pop_id):
     # initialize dictionary to map basis to population percentage in each district
     group_percentages_dict = {}
-    for g in groups:
+    for g in group_ids:
         group_percentages_dict[g] = []
 
-    # for each district in the partition
-    for district in partition.parts:
-        # initialize populations for this district
-        total_pop = 0
-        for g in groups:
-            group_percentages_dict[g].append(0)
-        
-        # for each precinct in the district
-        for precinct in TODO:
-            for g in groups:
-                group_percentages_dict[g][-1] += TODO PRECINCT POPULATION OF GROUP
-
+    # get percentages using partition object which keeps track of population by grouping and total pop
+    for g in group_ids:
+        for district_id, group_pop in partition[g].items():
+            group_percentages_dict[g].append(group_pop / partition[total_pop_id][district_id])
+    
+    # sort percentages in ascending order
+    for g in group_ids:
+        group_percentages_dict[g].sort()
+    
+    return group_percentages_dict
