@@ -1,6 +1,8 @@
 import sys
 import random
 
+# source: https://github.com/jeffreyshen19/Seats-Votes-Curves/blob/master/generator/uniform_partisan_swing.py
+
 # data should be in form ["rep_votes,dem_votes","rep_votes,dem_votes"] where each index element represents
 # a district and the party votes are the totals for that district
 # ouput file does not have to exist but the folder(s) it its stored in must exist
