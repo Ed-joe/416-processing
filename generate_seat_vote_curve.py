@@ -1,12 +1,13 @@
 import sys
 import random
 
+
 # source: https://github.com/jeffreyshen19/Seats-Votes-Curves/blob/master/generator/uniform_partisan_swing.py
 
-# data should be in form ["rep_votes,dem_votes","rep_votes,dem_votes"] where each index element represents
+# data should be in form ["rep_votes,dem_votes","rep_votes,dem_votes",...] where each index element represents
 # a district and the party votes are the totals for that district
 # ouput file does not have to exist but the folder(s) it its stored in must exist
-def generate_seat_vote_curve(data, output_file):
+def generate_seat_vote_curve(data):
     # initialize district level results list
     voting_by_district = []
 
@@ -51,7 +52,7 @@ def generate_seat_vote_curve(data, output_file):
         total_rep_seats = 0
         total_dem_seats = 0
 
-        for _ in range(1000): # simulate 1000 elections
+        for _ in range(1000):  # simulate 1000 elections
             # tell us which districts overflowed, if any
             district_overflowed_rep = [False] * len(voting_by_district)
             district_overflowed_dem = [False] * len(voting_by_district)
@@ -64,9 +65,10 @@ def generate_seat_vote_curve(data, output_file):
             updated_vals_rep = [0] * len(voting_by_district)
             updated_vals_dem = [0] * len(voting_by_district)
 
-            for k, district in enumerate(voting_by_district): # iterate over each district
+            for k, district in enumerate(voting_by_district):  # iterate over each district
                 # get percentage of this district's rep/dem votes
-                updated_vals_rep[k] = district["percent_rep"] + counter * SWING_CONST + SWING_CONST * random.randint(-5, 5)
+                updated_vals_rep[k] = district["percent_rep"] + counter * SWING_CONST + SWING_CONST * random.randint(-5,
+                                                                                                                     5)
                 updated_vals_dem[k] = 1 - updated_vals_rep[k] + diff
 
                 # account for overflow votes
@@ -77,7 +79,7 @@ def generate_seat_vote_curve(data, output_file):
                     excess_dem += 1
                     district_overflowed_dem[k] = True
 
-            for k, district in enumerate(voting_by_district): # iterate over each district
+            for k, district in enumerate(voting_by_district):  # iterate over each district
                 # Overflow mechanic: distribute excess votes to the other districts
                 if not district_overflowed_rep[k]:
                     updated_vals_rep[k] += SWING_CONST * (excess_rep / (len(voting_by_district) - excess_rep))
@@ -88,15 +90,15 @@ def generate_seat_vote_curve(data, output_file):
                     total_rep_seats += 1
                 if updated_vals_dem[k] > 0.50:
                     total_dem_seats += 1
-        
+
         # update loop counters
         i += SWING_CONST
         counter += 1
 
         # store generated seat curve data
         if i <= 1:
-            seats_votes_rep.append({"seats": float(total_rep_seats) / (len(voting_by_district) * 1000.0), "votes": i})
-            seats_votes_dem.insert(0, {"seats": float(total_dem_seats) / (len(voting_by_district) * 1000.0), "votes": 1 - i + diff})
+            seats_votes_rep.append((i, float(total_rep_seats) / (len(voting_by_district) * 1000.0)))
+            seats_votes_dem.insert(0, (1 - i + diff, float(total_dem_seats) / (len(voting_by_district) * 1000.0)))
 
     # main dem loop
     i = dem_vote_share
@@ -105,7 +107,7 @@ def generate_seat_vote_curve(data, output_file):
         total_dem_seats = 0
         total_rep_seats = 0
 
-        for j in range(0,1000): #simulate 1000 elections
+        for j in range(0, 1000):  # simulate 1000 elections
             district_overflowed_rep = [False] * len(voting_by_district)
             district_overflowed_dem = [False] * len(voting_by_district)
             excess_dem = 0
@@ -114,7 +116,8 @@ def generate_seat_vote_curve(data, output_file):
             updated_vals_dem = [0] * len(voting_by_district)
 
             for k, district in enumerate(voting_by_district):
-                updated_vals_dem[k] = district["percent_dem"] + counter * SWING_CONST + SWING_CONST * random.randint(-5, 5) + diff
+                updated_vals_dem[k] = district["percent_dem"] + counter * SWING_CONST + SWING_CONST * random.randint(-5,
+                                                                                                                     5) + diff
                 updated_vals_rep[k] = 1 - (updated_vals_dem[k] - diff)
 
                 if updated_vals_rep[k] > 1:
@@ -126,7 +129,7 @@ def generate_seat_vote_curve(data, output_file):
                     district_overflowed_dem[k] = True
 
             for k, district in enumerate(voting_by_district):
-                #Overflow mechanic: distribute excess votes to the other districts
+                # Overflow mechanic: distribute excess votes to the other districts
                 if district_overflowed_rep[k] is False:
                     updated_vals_rep[k] -= SWING_CONST * (excess_rep / (len(voting_by_district) - excess_rep))
 
@@ -142,34 +145,15 @@ def generate_seat_vote_curve(data, output_file):
         counter += 1
 
         if i <= 1:
-            seats_votes_dem.append({"seats": float(total_dem_seats) / (len(voting_by_district) * 1000.0), "votes": i + diff})
-            seats_votes_rep.insert(0, {"seats": float(total_rep_seats) / (len(voting_by_district) * 1000.0), "votes": 1 - i})
+            seats_votes_dem.append(
+                (i + diff, float(total_dem_seats) / (len(voting_by_district) * 1000.0)))
+            seats_votes_rep.insert(0, (1 - i, float(total_rep_seats) / (len(voting_by_district) * 1000.0)))
 
     # Add endpoints
-    seats_votes_rep.insert(0, {"seats": 0, "votes": 0})
-    seats_votes_dem.insert(0, {"seats": 0, "votes": 0})
-    seats_votes_rep.append({"seats": 1, "votes": 1})
-    seats_votes_dem.append({"seats": 1, "votes": 1})
-
-    # Write out to file
-    output_file.write("votes,seatsR,seatsD\n")
-    for i in range(0, len(seats_votes_dem)):
-        output_file.write(str(100 * seats_votes_rep[i]["votes"]) + "," + str(100 * seats_votes_rep[i]["seats"]) + "," + str(100 * seats_votes_dem[i]["seats"]) + "\n")
-
-    output_file.close()
+    seats_votes_rep.insert(0, (0, 0))
+    seats_votes_dem.insert(0, (0, 0))
+    seats_votes_rep.append((1, 1))
+    seats_votes_dem.append((1, 1))
 
 
-### MAIN SCRIPT
-''' @TODO 
-    import data in form of array with length equal to number of districts.
-    each list element should be a string with two integers separated by a comma,
-    elements should be in the form 'rep_votes,dem_votes' where rep_votes is the 
-    number of republican votes in that district
-'''
-formatted_data = []
-
-# name of output file to write to
-output = ''
-
-# run algorithm, this will also write data to output file
-generate_seat_vote_curve(formatted_data, output)
+    return seats_votes_rep, seats_votes_dem
