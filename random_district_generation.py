@@ -13,7 +13,6 @@ class RandomDistrictGenerator:
         self.num_chain_iterations = num_chain_iterations
         self.num_random_districtings = num_random_districtings
         self.precinct_mapping_column_id = precinct_mapping_column_id
-        self.initial_partition_path = initial_partition_path
         self.output_data_path = output_data_path
         self.population_deviation_threshold = population_deviation_threshold
         self.initial_partition = None
@@ -79,6 +78,5 @@ generator = RandomDistrictGenerator(precincts_data_path=config_info['precincts_d
                                     num_chain_iterations=config_info['num_chain_iterations'],
                                     num_random_districtings=config_info['num_random_districtings'],
                                     precinct_mapping_column_id=config_info['precinct_mapping_column_id'],
-                                    initial_partition_path=config_info["initial_partition_path"],
                                     output_data_path=config_info["output_data_path"],
                                     population_deviation_threshold=config_info['population_deviation_threshold'])

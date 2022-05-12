@@ -1,10 +1,12 @@
 import random
 import mysql.connector
+import geopandas as gpd
+import pandas as pd
 
 mydb = mysql.connector.connect(
     host='mysql3.cs.stonybrook.edu',
-    user='rjwillett',
-    password='112001203',
+    user='ejcarey',
+    password='112029315',
     database='Sparks'
 )
 
@@ -38,5 +40,50 @@ mycursor = mydb.cursor()
 #     )
 #     count += 1
 #     mycursor.execute(sql, val)
+#
+# count = 0
+# for i in range(0, 4):
+#     sql = 'INSERT INTO district (district_id, district_plan_id) VALUES (%s, %s)'
+#     val = (
+#         count,
+#         0
+#     )
+#     count += 1
+#     mycursor.execute(sql, val)
+
+# count = 0
+
+# for index, row in data.iterrows():
+#     sql = 'INSERT INTO precinct (precinct_id, name) VALUES (%s, %s)'
+#     val = (
+#         index,
+#         row["precinct_name"]
+#     )
+#     count += 1
+#     mycursor.execute(sql, val)
+
+# data = gpd.read_file("C:\\Users\\Admin\\PycharmProjects\\CSE416PREPRO\\output\\test.geojson")
+# data = data.fillna(0)
+# demographic_map = {"black_pop": 0, "amer_indian_pop": 1, "asian_pop": 2, "2020_biden_votes": 3, "hispanic_pop": 4,
+#                    "pacific_pop": 5, "2020_trump_votes": 6,
+#                    "total_pop": 7, "white_pop": 8}
+# for index, row in data.iterrows():
+#     for demographic in demographic_map.keys():
+#         sql = 'INSERT INTO precinct_demographic_and_election_data (precinct_id, demographic_and_election_data, demographic_and_election_data_key) VALUES (%s, %s, %s)'
+#         val = (
+#             index,
+#             row[demographic],
+#             demographic_map[demographic]
+#         )
+#         mycursor.execute(sql, val)
+
+nv_proposed_plan_mapping = pd.read_csv("C:\\Users\\Admin\\PycharmProjects\\CSE416PREPRO\\output\\nv_mapping.csv", index_col=[0])
+for index, row in nv_proposed_plan_mapping.iterrows():
+    sql = 'INSERT INTO precinct_district_map (district_id, precinct_id) VALUES (%s, %s)'
+    val = (
+        row[0].item(),
+        index
+    )
+    mycursor.execute(sql, val)
 
 mydb.commit()
