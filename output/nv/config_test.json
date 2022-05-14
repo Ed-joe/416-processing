@@ -1,0 +1,11 @@
+{
+  "precincts_graph_path": "C:\\Users\\Admin\\PycharmProjects\\CSE416PREPRO\\output\\nv\\adjacency_graph.json",
+  "state_id": "nv",
+  "num_chain_iterations": 2,
+  "num_random_districtings": 3,
+  "precinct_mapping_path": "C:\\Users\\Admin\\PycharmProjects\\CSE416PREPRO\\output\\nv\\mapping.csv",
+  "output_data_path": "C:\\Users\\Admin\\PycharmProjects\\CSE416PREPRO\\output\\nv",
+  "population_deviation_threshold": ".5",
+  "target_groups": ["hispanic_pop", "white_pop", "black_pop", "amer_indian_pop", "asian_pop", "pacific_pop"],
+  "job_name": "1"
+}
