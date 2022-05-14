@@ -40,4 +40,4 @@ complete_precinct_level_data[columns_to_aggregate] = block_demographic_data[colu
 complete_precinct_level_data = complete_precinct_level_data.fillna(0)
 
 # Export combined precinct level election and demographic data
-complete_precinct_level_data.to_file(args.d + "\\precinct_level_elections_and_demographics.geojson", driver='GeoJSON')
+complete_precinct_level_data.to_file(args.d + "\\precinct_level_elections_and_demographics.json", driver='GeoJSON')
