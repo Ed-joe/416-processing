@@ -83,7 +83,7 @@ class RandomDistrictGenerator:
             districting_metrics = districting_metrics.append(self.process_plan_metrics(chain_partition), ignore_index=True)
 
         # Output to output directory
-        districting_metrics.to_json(self.output_data_path + "\\random_district_data_"+ self.state_id + "_" + self.job_name +".json", orient="index")
+        districting_metrics.to_json(self.output_data_path + "/random_district_data_"+ self.state_id + "_" + self.job_name +".json", orient="index")
 
 
 parser = argparse.ArgumentParser(description="Take in config file with paths and other info for MGGG")

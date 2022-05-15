@@ -20,7 +20,7 @@ if not os.path.exists(args.d):
 block_demographic_data = geopandas.read_file(args.block_demographics)
 census_to_demographic_name_map = {"P0020001": "TOTAL_POPULATION", "P0020002": "HISPANIC_LATINO", "P0020005": "WHITE",
                                   "P0020006": "AFRICAN_AMERICAN", "P0020007": "AMERICAN_INDIAN", "P0020008": "ASIAN",
-                                  "P0020009": "PACIFIC_ISLANDER", "P0020010": "OTHER"}
+                                  "P0020009": "PACIFIC_ISLANDER"}
 block_demographic_data = block_demographic_data.rename(columns=census_to_demographic_name_map)
 block_demographic_data = block_demographic_data.filter(["geometry"] + list(census_to_demographic_name_map.values()))
 
