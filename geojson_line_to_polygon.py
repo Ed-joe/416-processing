@@ -11,15 +11,15 @@ args = parser.parse_args()
 
 geojson = geopandas.read_file(args.i)
 
-d = {'name': [], 'geometry': []}
+d = {'geometry': []}
 
 for i in range(len(geojson.geometry)):
     # print(geojson)
-    d['name'].append(geojson.name[i])
+    # d['name'].append(geojson.name[i])
     d['geometry'].append(Polygon(geojson.geometry[i].coords))
 
 # print(d)
 
-new_geojson = geopandas.GeoDataFrame(d, crs="EPSG:4326")
+new_geojson = geopandas.GeoDataFrame(d)
 new_geojson.to_file(args.d, driver='GeoJSON')
 print('wrote to', args.d)
