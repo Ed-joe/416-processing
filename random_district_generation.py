@@ -8,6 +8,7 @@ import calculate_measures as sw_measures
 import box_and_whisker
 import warnings
 from datetime import datetime
+from gerrychain.random import random
 
 class RandomDistrictGenerator:
     def __init__(self, precincts_graph_path, state_id, num_chain_iterations, num_random_districtings,
@@ -97,6 +98,8 @@ warnings.simplefilter(action='ignore', category=FutureWarning)
 with open(args.config_path, "r") as json_file:
     config_info = json.load(json_file)
     json_file.close()
+
+random.seed(args.file_identifier)
 
 generator = RandomDistrictGenerator(precincts_graph_path=config_info['precincts_graph_path'],
                                     state_id=config_info['state_id'],
