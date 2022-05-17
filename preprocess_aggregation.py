@@ -26,9 +26,11 @@ block_demographic_data = block_demographic_data.filter(["geometry"] + list(censu
 
 # Load 2020 precinct level election data and remove unnecessary data.
 precinct_election_data = geopandas.read_file(args.precinct_elections)
+# have to change to 'COUNTYFP20' and 'NAME20' for Illinois data
 election_type_rename_map = {"COUNTYFP": "county_fips", "NAME": "precinct_name", "G20PRERTRU": "REPUBLICAN",
                             "G20PREDBID": "DEMOCRAT"}
 precinct_election_data = precinct_election_data.rename(columns=election_type_rename_map)
+print(precinct_election_data.columns)
 complete_precinct_level_data = precinct_election_data.filter(["geometry"] + list(election_type_rename_map.values()))
 
 # Make an assignment of blocks to precinct using maup, and then use pandas groupby to aggregate data, replace NA vals

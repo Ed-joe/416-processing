@@ -7,10 +7,11 @@ import pandas as pd
 import calculate_measures as sw_measures
 import box_and_whisker
 import warnings
+from datetime import datetime
 
 class RandomDistrictGenerator:
     def __init__(self, precincts_graph_path, state_id, num_chain_iterations, num_random_districtings,
-                 precinct_mapping_path, output_data_path, population_deviation_threshold, target_groups, job_name):
+                 precinct_mapping_path, output_data_path, population_deviation_threshold, target_groups, job_name, file_identifier):
         self.precincts_graph = Graph.from_json(precincts_graph_path)
         self.state_id = state_id
         self.num_chain_iterations = num_chain_iterations
@@ -21,6 +22,7 @@ class RandomDistrictGenerator:
         self.markov_chain = None
         self.target_groups = target_groups
         self.job_name = job_name
+        self.file_identifier = file_identifier
 
     def create_new_markov_chain(self):
         election = Election("2020_presidential", {"Democratic": "DEMOCRAT", "Republican": "REPUBLICAN"})
@@ -81,13 +83,14 @@ class RandomDistrictGenerator:
             for idx, chain_partition in enumerate(self.markov_chain):
                 pass
             districting_metrics = districting_metrics.append(self.process_plan_metrics(chain_partition), ignore_index=True)
-
+            print("Plan " + str(self.file_identifier) + " generated at " + datetime.now().strftime("%H:%M:%S"))
         # Output to output directory
-        districting_metrics.to_json(self.output_data_path + "/random_district_data_"+ self.state_id + "_" + self.job_name +".json", orient="index")
+        districting_metrics.to_json(self.output_data_path + "/random_district_data_" + self.state_id + "_" + self.file_identifier + ".json", orient="index")
 
 
 parser = argparse.ArgumentParser(description="Take in config file with paths and other info for MGGG")
 parser.add_argument("--config-path", help='path to config json file', required=True)
+parser.add_argument("--file-identifier", help='number to identify the file', required=True)
 args = parser.parse_args()
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
@@ -103,6 +106,7 @@ generator = RandomDistrictGenerator(precincts_graph_path=config_info['precincts_
                                     output_data_path=config_info["output_data_path"],
                                     population_deviation_threshold=config_info['population_deviation_threshold'],
                                     target_groups=config_info['target_groups'],
-                                    job_name=config_info['job_name'])
+                                    job_name=config_info['job_name'],
+                                    file_identifier=args.file_identifier)
 
 generator.run_chain()
