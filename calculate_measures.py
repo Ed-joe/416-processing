@@ -27,7 +27,7 @@ def num_majority_minority_map(partition, group_ids):
         for group in group_ids:
             if partition[group][district] > partition[majority][district]:
                 majority = group
-        if not "white_pop":
+        if majority != "white_pop":
             demographics[majority] += 1
 
     return demographics
